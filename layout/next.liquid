@@ -1,0 +1,17 @@
+{%comment%}Beae V2.0{%endcomment%}
+{%- comment -%}
+  Default Beae theme
+{%- endcomment -%}
+<!doctype html>
+<html class="no-js" lang="{{ shop.locale }}">
+{{ content_for_header }}
+<head>
+</head>
+
+<body class="template-{{ template | split: '.' | first }}">
+  <div class="Beae-theme">
+    {{ content_for_layout }}
+  </div>
+ 
+</body>
+</html>

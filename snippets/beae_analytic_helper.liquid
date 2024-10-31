@@ -1,0 +1,109 @@
+<!-- This snippet render by Beae - Landing page builder to use function of Google Analytic 4 -->
+<!-- To use this function, go to settings in app and enable analytic [link docs] -->
+{% unless beae_helper %}
+  {% if shop.metafields.beae.measurement_id %}
+  {% assign beae_helper = false %}
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id={{ shop.metafields.beae.measurement_id }}"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', '{{ shop.metafields.beae.measurement_id }}', { groups: 'beae' });
+    window.beaePageInfo = Object.assign(window.beaePageInfo || {})
+    window.addEventListener("load", () => {
+      let pageId = window.beaePageSetting?.pageId
+      let pageTitle = window.beaePageSetting?.pageTitle
+      let pageType = window.beaePageSetting?.pageType
+      window.beaePageInfo = Object.assign(window.beaePageInfo || {}, {
+        "beae_page_id": pageId,
+        "beae_page_name": pageTitle,
+        "beae_page_type": pageType,
+        "beae_page_subject_id": '{{ page.id }}',
+          {% if template.name == 'product' %}
+          {% assign initial_image_url = product.featured_image | img_url %}
+      {% assign dynamic_image_path = initial_image_url %}
+      {% assign BASE_URL = "//cdn.shopify.com/s/files/" %}
+      {% if initial_image_url and initial_image_url contains BASE_URL %}
+    {% assign image_paths = initial_image_url | split: BASE_URL %}
+    {% assign dynamic_image_path = image_paths[1] | default: "" %}
+    {% endif %}
+    beae_product_name: '{{ product.title }}',
+      beae_product_id: '{{ product.id }}',
+        beae_product_page_image: '{{ dynamic_image_path }}',
+          {% endif %}
+    {% if template.name == 'collection' %}
+  
+    {% assign initial_image_url = collection.featured_image | img_url %}
+    {% assign dynamic_image_path = initial_image_url %}
+    {% assign BASE_URL = "//cdn.shopify.com/s/files/" %}
+    {% if initial_image_url and initial_image_url contains BASE_URL %}
+    {% assign image_paths = initial_image_url | split: BASE_URL %}
+    {% assign dynamic_image_path = image_paths[1] | default: "" %}
+    {% endif %}
+  
+    beae_collection_name: '{{ collection.title }}',
+      beae_collection_id: '{{ collection.id }}',
+        beae_collection_page_image: '{{ dynamic_image_path }}',
+          {% endif %}
+        });
+    if (beaePageInfo.beae_page_id && beaePageInfo.beae_page_id !== "undefined") {
+      if (!(beaePageInfo.beae_collection_id == "" || beaePageInfo.beae_product_id == "")) {
+        setTimeout(function () {
+          console.log('send', 'event', 'beae_view_page', Object.assign({
+            beae_view_page: 1,
+            send_to: 'beae',
+            beae_event: 'view_page'
+          }, window.beaePageInfo))
+          gtag('event', 'beae_view_page', Object.assign({
+            beae_view_page: 1,
+            send_to: 'beae',
+            beae_event: 'view_page'
+          }, window.beaePageInfo))
+        }, 500);
+      }
+    }
+    {% if template.name == 'product' %}
+    {% assign initial_image_url = product.featured_image | img_url %}
+    {% assign dynamic_image_path = initial_image_url %}
+    {% assign BASE_URL = "//cdn.shopify.com/s/files/" %}
+    {% if initial_image_url and initial_image_url contains BASE_URL %}
+    {% assign image_paths = initial_image_url | split: BASE_URL %}
+    {% assign dynamic_image_path = image_paths[1] | default: "" %}
+    {% endif %}
+    if (beaePageInfo.beae_page_id && beaePageInfo.beae_page_id !== "undefined") {
+      if (beaePageInfo.beae_product_id != "") {
+        setTimeout(() => {
+          console.log("send", 'event', 'beae_view_product', Object.assign(
+            {
+              send_to: 'beae',
+              beae_view_product: 1,
+              beae_event: 'view_product',
+            },
+            Object.assign(window.beaePageInfo)))
+          gtag('event', 'beae_view_product', Object.assign(
+            {
+              send_to: 'beae',
+              beae_view_product: 1,
+              beae_event: 'view_product',
+            },
+            Object.assign(window.beaePageInfo))
+          )
+        }, 500)
+      }
+    }
+    {% endif %}
+      });
+  </script>
+  {% endif %}
+  <script>
+    window.addEventListener('load', () => {
+      // fallback for gtag when not initialized
+      if (typeof window.gtag !== 'function') {
+        window.gtag = (str1, str2, obj) => {
+        }
+      }
+    })
+  </script>
+  {% assign beae_helper = true %}{% endunless %}
+  <!-- End snippet of Google Analytic 4 -->
